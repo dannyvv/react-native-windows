@@ -8,5 +8,4 @@
     <ReactNativeWindowsDir Condition="'$(ReactNativeWindowsDir)' == ''">$([MSBuild]::NormalizeDirectory('$(MSBuildThisFileDirectory)\..\..'))</ReactNativeWindowsDir>
     <UseExperimentalNuget Condition="'$(UseExperimentalNuget)' == ''">false</UseExperimentalNuget>
   </PropertyGroup>
-  <Import Project="$(ReactNativeWindowsDir)\PropertySheets\Bundle.props" />
 </Project>
