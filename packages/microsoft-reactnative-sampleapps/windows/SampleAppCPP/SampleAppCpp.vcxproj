@@ -176,9 +176,6 @@
     <ReactNativeWindowsDir Condition="'$(ReactNativeWindowsDir)' == ''">$([MSBuild]::GetDirectoryNameOfFileAbove($(MSBuildThisFileDirectory), 'lerna.json'))vnext\</ReactNativeWindowsDir>
   </PropertyGroup>
   <ItemGroup>
-    <Natvis Include="$(ReactNativeWindowsDir)Folly\Folly.natvis" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\SampleLibraryCpp\SampleLibraryCpp.vcxproj">
       <Project>{47eec7f3-40d3-49ba-82c1-eaf103b54215}</Project>
     </ProjectReference>
