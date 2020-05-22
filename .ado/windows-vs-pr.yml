@@ -186,7 +186,15 @@ jobs:
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
             /p:AppxPackageSigningEnabled=false
+            /bl:packages/playground/windows/playground.binlog
 
+      - task: PublishPipelineArtifact@1
+        displayName: Upload msbuild.binlog (on failure)
+        inputs:
+          targetPath: 'packages/playground/windows/*.binlog'
+          artifact: '$(Agent.JobName).msbuild.binlog'
+          publishLocation: 'pipeline'
+        condition: failed()
 
   - job: RNWUniversalOtherProjectsPR
     displayName: Universal Other Projects PR
@@ -235,6 +243,7 @@ jobs:
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
             /p:AppxPackageSigningEnabled=false
+            /bl:Playground.binlog
 
       - task: NuGetCommand@2
         displayName: NuGet restore - Playground Win32
@@ -258,6 +267,15 @@ jobs:
             /p:PreferredToolArchitecture=$(MSBuildPreferredToolArchitecture)
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
+            /bl:PlaygroundWin32.binlog
+
+      - task: PublishPipelineArtifact@1
+        displayName: Upload msbuild.binlog (on failure)
+        inputs:
+          targetPath: 'packages/playground/windows/*.binlog'
+          artifact: '$(Agent.JobName).msbuild.binlog'
+          publishLocation: 'pipeline'
+        condition: failed()
 
   - job: RNWSampleAppsPR
     displayName: Sample Apps PR
@@ -329,6 +347,22 @@ jobs:
           script: yarn bundle-cpp
           workingDirectory: packages\microsoft-reactnative-sampleapps
         condition: succeeded()
+
+      - task: PublishPipelineArtifact@1
+        displayName: Upload msbuild.binlog (on failure)
+        inputs:
+          targetPath: 'packages/microsoft-reactnative-sampleapps/windows/*.binlog'
+          artifact: '$(Agent.JobName).msbuild.binlog'
+          publishLocation: 'pipeline'
+        condition: failed()
+
+      - task: PublishPipelineArtifact@1
+        displayName: Upload msbuild.binlog (on failure)
+        inputs:
+          targetPath: '*.binlog'
+          artifact: '$(Agent.JobName).msbuild.binlog'
+          publishLocation: 'pipeline'
+        condition: failed()
 
   - job: RNWDesktopPR
     displayName: Desktop PR
