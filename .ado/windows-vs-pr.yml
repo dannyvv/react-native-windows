@@ -278,12 +278,12 @@ jobs:
         condition: failed()
 
       - task: PublishPipelineArtifact@1
-            displayName: Upload msbuild.binlog (win32) (on failure)
-            inputs:
-              targetPath: 'packages/playground/windows/PlaygroundWin32.binlog'
-              artifact: '$(Agent.JobName).msbuild2.binlog'
-              publishLocation: 'pipeline'
-            condition: failed()
+        displayName: Upload msbuild.binlog (win32) (on failure)
+        inputs:
+          targetPath: 'packages/playground/windows/PlaygroundWin32.binlog'
+          artifact: '$(Agent.JobName).msbuild2.binlog'
+          publishLocation: 'pipeline'
+        condition: failed()
 
   - job: RNWSampleAppsPR
     displayName: Sample Apps PR
