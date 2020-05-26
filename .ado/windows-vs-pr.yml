@@ -186,12 +186,12 @@ jobs:
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
             /p:AppxPackageSigningEnabled=false
-            /bl:packages/playground/windows/playground.binlog
+            /bl:$(System.DefaultWorkingDirectory)/msbuildBinLogs/playground.binlog
 
       - task: PublishPipelineArtifact@1
         displayName: Upload msbuild.binlog (on failure)
         inputs:
-          targetPath: 'packages/playground/windows/playground.binlog'
+          targetPath: '$(System.DefaultWorkingDirectory)/msbuildBinLogs'
           artifact: '$(Agent.JobName).msbuild.binlog'
           publishLocation: 'pipeline'
         condition: failed()
@@ -243,7 +243,7 @@ jobs:
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
             /p:AppxPackageSigningEnabled=false
-            /bl:Playground.binlog
+            /bl:$(System.DefaultWorkingDirectory)/MsBuildBinLogs/Playground.binlog
 
       - task: NuGetCommand@2
         displayName: NuGet restore - Playground Win32
@@ -267,21 +267,13 @@ jobs:
             /p:PreferredToolArchitecture=$(MSBuildPreferredToolArchitecture)
             /p:PlatformToolset=$(MSBuildPlatformToolset)
             /p:BaseIntDir=$(BaseIntDir)
-            /bl:PlaygroundWin32.binlog
+            /bl:$(System.DefaultWorkingDirectory)/MsBuildBinLogs/PlaygroundWin32.binlog
 
       - task: PublishPipelineArtifact@1
         displayName: Upload msbuild.binlog (on failure)
         inputs:
-          targetPath: 'packages/playground/windows/Playground.binlog'
+          targetPath: '$(System.DefaultWorkingDirectory)/msbuildBinLogs'
           artifact: '$(Agent.JobName).msbuild.binlog'
-          publishLocation: 'pipeline'
-        condition: failed()
-
-      - task: PublishPipelineArtifact@1
-        displayName: Upload msbuild.binlog (win32) (on failure)
-        inputs:
-          targetPath: 'packages/playground/windows/PlaygroundWin32.binlog'
-          artifact: '$(Agent.JobName).msbuild2.binlog'
           publishLocation: 'pipeline'
         condition: failed()
 
@@ -355,14 +347,6 @@ jobs:
           script: yarn bundle-cpp
           workingDirectory: packages\microsoft-reactnative-sampleapps
         condition: succeeded()
-
-      - task: PublishPipelineArtifact@1
-        displayName: Upload msbuild.binlog (on failure)
-        inputs:
-          targetPath: 'packages/microsoft-reactnative-sampleapps/windows/*.binlog'
-          artifact: '$(Agent.JobName).msbuild.binlog'
-          publishLocation: 'pipeline'
-        condition: failed()
 
       - task: PublishPipelineArtifact@1
         displayName: Upload msbuild.binlog (on failure)
