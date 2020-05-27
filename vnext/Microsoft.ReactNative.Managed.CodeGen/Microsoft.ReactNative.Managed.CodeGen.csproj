@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+    <Nullable>enable</Nullable>
+    <LangVersion>8.0</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+    This file is linked because we want to use this to esnure the names of the code we parse line up and gives us compile errors if not.
+    But we don't want to actually link against the Microsfot.ReactNative.Managed assembly becuase then we would have a cyclic dependency
+    to compile-time generate the state for that assembly.
+    -->
+    <Compile Include="..\Microsoft.ReactNative.SharedManaged\ReactAttributes.cs" Link="ReactAttributes.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Humanizer" Version="2.8.11" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp" Version="3.5.0" />
+    <PackageReference Include="Microsoft.CodeAnalysis.CSharp.Workspaces" Version="3.5.0" />
+    <PackageReference Include="RuntimeContracts" Version="0.3.0" />
+  </ItemGroup>
+
+</Project>

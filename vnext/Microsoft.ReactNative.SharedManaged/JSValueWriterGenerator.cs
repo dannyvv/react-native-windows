@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Xml.Schema;
 using static Microsoft.ReactNative.Managed.JSValueGenerator;
 using static System.Linq.Expressions.Expression;
 
@@ -19,6 +20,7 @@ namespace Microsoft.ReactNative.Managed
     private static readonly Assembly s_currentAssembly = typeof(JSValueReaderGenerator).Assembly;
 
     private static readonly ConcurrentDictionary<Assembly, bool> m_registerdAssemblies = new ConcurrentDictionary<Assembly, bool>();
+    private static readonly ConcurrentDictionary<Type, MethodInfo> s_codeGenerateGenericExtensionMethods = new ConcurrentDictionary<Type, MethodInfo>();
 
     private static readonly Lazy<KeyValuePair<Type, MethodInfo>[]> s_allMethods;
     private static readonly Lazy<IReadOnlyDictionary<Type, MethodInfo>> s_nonGenericMethods;
@@ -39,6 +41,15 @@ namespace Microsoft.ReactNative.Managed
       {
         throw new InvalidOperationException("Cannot register assemblies dynamically after the first value is serialized.");
       }
+    }
+
+    public static void RegisterCodeGeneratorGenericExtensionMethod(Type type, MethodInfo method)
+    {
+      if (!method.IsGenericMethod)
+      {
+        throw new InvalidOperationException("Cannot register non generic methods.");
+      }
+      s_codeGenerateGenericExtensionMethods.TryAdd(type, method);
     }
 
     static JSValueWriterGenerator()
@@ -82,7 +93,7 @@ namespace Microsoft.ReactNative.Managed
       s_genericMethods = new Lazy<IReadOnlyDictionary<Type, SortedList<Type, MethodInfo>>>(() =>
       {
         var genericMethods =
-          from pair in s_allMethods.Value
+          from pair in s_allMethods.Value.Union(s_codeGenerateGenericExtensionMethods)
           where pair.Value.IsGenericMethod
           let type = pair.Key
           let keyType = type.GetTypeInfo().IsGenericType ? type.GetGenericTypeDefinition()
@@ -203,7 +214,7 @@ namespace Microsoft.ReactNative.Managed
 
     // It cannot be an extension method because it would conflict with the generic
     // extension method that uses T value type.
-    public static void WriteEnum<TEnum>(IJSValueWriter writer, TEnum value) /*TODO: Add in C# 7.3: where TEnum : Enum*/
+    public static void WriteEnum<TEnum>(IJSValueWriter writer, TEnum value) where TEnum : Enum
     {
       writer.WriteValue((int)(object)value);
     }

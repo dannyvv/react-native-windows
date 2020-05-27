@@ -1,0 +1,42 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvailableItemName Include="Lkg" />
+    <Lkg Include="CodeGen\Lkg\*.lkg" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Microsoft.ReactNative.Managed.CodeGen\Microsoft.ReactNative.Managed.CodeGen.csproj" />
+    <!--<ProjectReference Include="..\Microsoft.ReactNative.Managed\Microsoft.ReactNative.Managed.csproj">
+      <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
+    </ProjectReference>-->
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="CodeGen\Lkg\" />
+  </ItemGroup>
+
+  <Target Name="CopyLkgFiles" BeforeTargets="Compile">
+
+    <Copy SourceFiles="@(Lkg)" DestinationFiles="@(Lkg->'$(OutDir)Lkg\%(Filename)%(Extension)')" />
+
+    <ItemGroup>
+      <FileWrites Include="@(Lkg->'$(OutDir)Lkg\%(Filename)%(Extension)')" />
+    </ItemGroup>
+
+  </Target>
+</Project>
+

@@ -16,6 +16,12 @@ namespace SampleLibraryCS
         public int y = 0;
     };
 
+    enum TestEnum : byte
+    {
+        X = 0,
+        Y = 22,
+    }
+
     // Sample ReactModule
 
     [ReactModule]

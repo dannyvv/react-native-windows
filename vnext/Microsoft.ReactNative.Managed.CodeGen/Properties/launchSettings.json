@@ -1,0 +1,9 @@
+{
+  "profiles": {
+    "Microsoft.ReactNative.Managed.CodeGen": {
+      "commandName": "Project",
+      "commandLineArgs": "@c:\\temp\\run.rsp",
+      "workingDirectory": "Z:\\src\\r1\\packages\\microsoft-reactnative-sampleapps\\windows\\SampleLibraryCS"
+    }
+  }
+}

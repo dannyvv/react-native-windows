@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+  Copyright (c) Microsoft Corporation. All rights reserved.
+ Licensed under the MIT License.. 
+-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ReactNativeCodeGenEnabled Condition="'$(ReactNativeCodeGenEnabled)' == ''">false</ReactNativeCodeGenEnabled>
+  </PropertyGroup>
+
+  <Target Name="_ReactNativeCodeGenEnsureCodeGenToolPublished" Condition="'$(ReactNativeCodeGenEnabled)' == 'true'">
+    <Error Text="fail" />
+    <PropertyGroup>
+      <_ReactNativeName>$(AssemblyName)-Microsoft.ReactNative.Managed</_ReactNativeName>
+      <_ReactNativeCodeGenOutFolder>$(OutDir)$(_ReactNativeName)\</_ReactNativeCodeGenOutFolder>
+
+      <ReactNativeCodeGenFile>$(_ReactNativeCodeGenOutFolder)$(_ReactNativeName).g.cs</ReactNativeCodeGenFile>
+      <_ReactNativeCodeGenResponseFile>$(_ReactNativeCodeGenOutFolder)$(_ReactNativeName).rsp</_ReactNativeCodeGenResponseFile>
+
+      <_ReactNativeCodeGenProjectPath>C:\Users\danny\source\repos\Solution1\ConsoleApp1\ConsoleApp1.csproj</_ReactNativeCodeGenProjectPath>
+      <_ReactNativeCodeGenProjectProperties>DeployOnBuild=true;Configuration=$(Configuration);TargetFramework=netcoreapp2.2;PublishProfile=DeployAsTool$(Configuration)</_ReactNativeCodeGenProjectProperties>
+    </PropertyGroup>
+
+    <MSBuild Projects="$(_ReactNativeCodeGenProjectPath)" Targets="PublishTool" BuildInParallel="$(BuildInParallel)" Properties="$(_ReactNativeCodeGenProjectProperties)" ContinueOnError="!$(BuildingProject)" RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+
+      <!-- This target will return all the files of the tool so we can track these for incrementality-->
+      <Output TaskParameter="TargetOutputs" ItemName="_ReactNativeCodeGenToolFilesTemp" />
+    </MSBuild>
+
+    <MSBuild Projects="$(_ReactNativeCodeGenProjectPath)" Targets="GetPublishedToolPath" BuildInParallel="$(BuildInParallel)" Properties="$(_ReactNativeCodeGenProjectProperties)" ContinueOnError="!$(BuildingProject)" RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
+
+      <!-- This target will return the tools executable. We unfortunately have ot use a separate target invocation
+         - because msbuid does not allow returning multiple pieces of data from a single invocation nor is it easy
+         - to setup a convention where the first element would be the executable
+         -->
+      <Output TaskParameter="TargetOutputs" ItemName="_ReactNativeCodeGenToolExecutableTemp" />
+
+    </MSBuild>
+
+    <ItemGroup>
+      <!-- MsBuild does not allow targets to return properties, so map it to a property from an itemgroup -->
+      <_ReactNativeCodeGenToolFiles Include="@(_ReactNativeCodeGenToolFilesTemp)" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <!-- MsBuild does not allow targets to return properties, so map it to a property from an itemgroup -->
+      <_ReactNativeCodeGenToolExecutable>@(_ReactNativeCodeGenToolExecutableTemp)</_ReactNativeCodeGenToolExecutable>
+    </PropertyGroup>
+
+  </Target>
+
+  <Target Name="ReactNativeCodeGen" AfterTargets="BeforeCompile" DependsOnTargets="PrepareForBuild;ResolveReferences;_ReactNativeCodeGenEnsureCodeGenToolPublished" Inputs="$(MSBuildProjectFullPath);@(Compile);@(_ReactNativeCodeGenToolFiles)" Outputs="$(ReactNativeCodeGenFile);$(_ReactNativeCodeGenResponseFile)" Condition="'$(ReactNativeCodeGenEnabled)' == 'true'">
+
+    <ItemGroup>
+      <_ReactNativeCodeGenDefineConstatnsAsItem Include="$(DefineConstants)" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ReactNativeCodeGenResponseFileLines Include="/ns:$(RootNamespace)" />
+      <_ReactNativeCodeGenResponseFileLines Include=" " />
+      <_ReactNativeCodeGenResponseFileLines Include="/o:$(ReactNativeCodeGenFile)" />
+      <_ReactNativeCodeGenResponseFileLines Include=" " />
+      <_ReactNativeCodeGenResponseFileLines Include="# Defines" />
+      <_ReactNativeCodeGenResponseFileLines Include="@(_ReactNativeCodeGenDefineConstatnsAsItem->'/d:%(Identity)')" />
+      <_ReactNativeCodeGenResponseFileLines Include=" " />
+      <_ReactNativeCodeGenResponseFileLines Include="# Source Files" />
+      <_ReactNativeCodeGenResponseFileLines Include="@(Compile->'/s:%(fullpath)')" />
+      <_ReactNativeCodeGenResponseFileLines Include=" " />
+      <_ReactNativeCodeGenResponseFileLines Include="# References" />
+      <_ReactNativeCodeGenResponseFileLines Include="@(ReferencePathWithRefAssemblies->'/r:%(fullpath)')" />
+    </ItemGroup>
+
+    <MakeDir Directories="$(XamlGeneratedOutputPath)intermediatexaml\" />
+
+    <WriteLinesToFile File="$(_ReactNativeCodeGenResponseFile)" Lines="@(_ReactNativeCodeGenResponseFileLines)" Overwrite="true" Encoding="Unicode"/>
+
+    <ItemGroup>
+      <FileWrites Include="$(_ReactNativeCodeGenResponseFile)" />
+    </ItemGroup>
+
+    <!-- Write the response file -->
+    <!-- _ReactNativeCodeGenResponseFile -->
+    <!-- <Exec Command="$(_ReactNativeCodeGenToolExecutable) $(_ReactNativeCodeGenResponseFile)" /> -->
+    <Exec Command="$(_ReactNativeCodeGenToolExecutable) $(ReactNativeCodeGenFile)" />
+
+    <ItemGroup>
+      <FileWrites Include="$(ReactNativeCodeGenFile)" />
+      <Compile Include="$(ReactNativeCodeGenFile)"/>
+    </ItemGroup>
+  </Target>
+</Project>
