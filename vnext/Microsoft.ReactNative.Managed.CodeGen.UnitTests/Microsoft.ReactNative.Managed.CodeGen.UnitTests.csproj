@@ -19,13 +19,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.ReactNative.Managed.CodeGen\Microsoft.ReactNative.Managed.CodeGen.csproj" />
-    <!--<ProjectReference Include="..\Microsoft.ReactNative.Managed\Microsoft.ReactNative.Managed.csproj">
-      <SetTargetFramework>TargetFramework=netstandard2.0</SetTargetFramework>
-    </ProjectReference>-->
-  </ItemGroup>
-
-  <ItemGroup>
     <Folder Include="CodeGen\Lkg\" />
   </ItemGroup>
 

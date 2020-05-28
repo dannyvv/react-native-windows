@@ -391,8 +391,10 @@ namespace Microsoft.ReactNative.Managed.CodeGen
     }
 
 
-    private StatementSyntax CodeGenWrite(ITypeSymbol symbol, ExpressionSyntax? expression = null,
-      IEnumerable<StatementSyntax> statements = null)
+    private StatementSyntax CodeGenWrite(
+      ITypeSymbol symbol,
+      ExpressionSyntax? expression = null,
+      IEnumerable<StatementSyntax>? statements = null)
     {
       Contract.Requires(expression != null ^ statements != null, "Only one of the args can be null.");
 

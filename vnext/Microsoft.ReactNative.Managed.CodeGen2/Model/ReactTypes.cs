@@ -133,19 +133,23 @@ namespace Microsoft.ReactNative.Managed.CodeGen.Model
         .OfType<IAssemblySymbol>()
         .FirstOrDefault(asm =>
           string.Equals(asm.Name, assemblyName, StringComparison.Ordinal));
+      
       if (assemblySymbol == null)
       {
         m_diagnostics.Add(Diagnostic.Create(DiagnosticDescriptors.CantFindReferenceAssembly, Location.None, assemblyName));
-        return null;
+        // Return object to avoid null, the reported error tracks failure.
+        return compilation.ObjectType;
       }
 
       var type = assemblySymbol.GetTypeByMetadataName(typeName);
       if (type == null)
       {
         m_diagnostics.Add(Diagnostic.Create(DiagnosticDescriptors.CantFindReferenceAssembly, Location.None, typeName, assemblySymbol.Identity.GetDisplayName(true)));
+        // Return object to avoid null, the reported error tracks failure.
+        return compilation.ObjectType;
       }
 
-      return type!;
+      return type;
     }
   }
 }

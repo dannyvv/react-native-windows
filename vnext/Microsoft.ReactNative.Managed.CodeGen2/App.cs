@@ -38,13 +38,16 @@ namespace Microsoft.ReactNative.Managed.CodeGen
 
       using (new ConsoleMeasurement("Compiling"))
       {
-        codeAnalyzer.CompileAndCheckForErrors();
+        if (!codeAnalyzer.TryCompileAndCheckForErrors())
+        {
+          return 1;
+        }
       }
 
       ReactAssembly assembly;
       using (new ConsoleMeasurement("Finding types"))
       {
-        assembly = codeAnalyzer.AnalyzeAndFindTypes();
+        assembly = codeAnalyzer.AnalyzeAndFindReactNativeInformation();
       }
 
       // $TODO: Errors

@@ -97,14 +97,14 @@ public class TestClass
 
       await codeAnalyzer.LoadMetadataReferencesAsync(references);
 
-      codeAnalyzer.CompileAndCheckForErrors();
-
-      var errorCount = codeAnalyzer.Errors.Count(diag => diag.Severity == DiagnosticSeverity.Error);
-
-      if (errorCount > 0)
+      var success = codeAnalyzer.TryCompileAndCheckForErrors();
+      if (!success)
       {
         TestContext.WriteLine(string.Join(Environment.NewLine, codeAnalyzer.Errors));
+        Assert.Fail("Errors encountered");
       }
+
+      var errorCount = codeAnalyzer.Errors.Count(diag => diag.Severity == DiagnosticSeverity.Error);
       Assert.AreEqual(0, errorCount);
 
       var type = codeAnalyzer.GetAllTypes().FirstOrDefault(tp => tp.Name == "TestClass");

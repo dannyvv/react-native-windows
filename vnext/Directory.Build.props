@@ -10,6 +10,9 @@
 
     <Platform Condition="'$(Platform)' == ''">x64</Platform>
     <Configuration Condition="'$(Configuration)' == ''">Debug</Configuration>
+
+    <!-- This property sets the CscTask to print the full path of the csharp file on errors and warnings rather than just the filename. -->
+    <GenerateFullPaths>true</GenerateFullPaths>
   </PropertyGroup>
 
   <PropertyGroup Label="Configuration">

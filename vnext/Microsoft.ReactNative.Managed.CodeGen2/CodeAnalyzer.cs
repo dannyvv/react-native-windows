@@ -28,7 +28,17 @@ namespace Microsoft.ReactNative.Managed.CodeGen
     private readonly ConcurrentBag<MetadataReference> m_metadataReferences = new ConcurrentBag<MetadataReference>();
 
     private Compilation? m_compilation { get; set; }
-    internal ReactTypes ReactTypes { get; private set; }
+
+    internal ReactTypes ReactTypes 
+    { 
+      get 
+      {
+        Contract.Assert(m_reactTypes != null);
+        return m_reactTypes;
+      } 
+  }
+
+    private ReactTypes? m_reactTypes;
 
     private readonly List<Diagnostic> m_errors = new List<Diagnostic>();
     public IEnumerable<Diagnostic> Errors => m_errors;
@@ -88,7 +98,7 @@ namespace Microsoft.ReactNative.Managed.CodeGen
       await block.Completion;
     }
 
-    public void CompileAndCheckForErrors()
+    public bool TryCompileAndCheckForErrors()
     {
       Contract.Assert(m_syntaxTrees.Any(), "Expected to have syntax trees loaded");
       Contract.Assert(m_metadataReferences.Any(), "Expected to have references loaded");
@@ -108,15 +118,10 @@ namespace Microsoft.ReactNative.Managed.CodeGen
         );
       if (m_errors.Count > 0)
       {
-        //return;
+        return false;
       }
 
-      if (!ReactTypes.TryLoad(m_compilation, m_errors, out var reactTypes))
-      {
-        return;
-      }
-
-      ReactTypes = reactTypes;
+      return ReactTypes.TryLoad(m_compilation, m_errors, out m_reactTypes);
     }
 
     internal IEnumerable<INamedTypeSymbol> GetAllTypes()
@@ -128,7 +133,7 @@ namespace Microsoft.ReactNative.Managed.CodeGen
       return allTypes;
     }
 
-    public ReactAssembly AnalyzeAndFindTypes()
+    public ReactAssembly AnalyzeAndFindReactNativeInformation()
     {
       Contract.Assert(m_compilation != null, "Expected to have a compilation. Must call CompileAndCheckForErrors first");
 
@@ -231,6 +236,8 @@ namespace Microsoft.ReactNative.Managed.CodeGen
         {
           if (type.TypeKind == TypeKind.Delegate)
           {
+            Contract.Assert(namedType.DelegateInvokeMethod != null);
+
             AddSerializableMethod(namedType.DelegateInvokeMethod);
           }
           else if (type.ContainingAssembly.Equals(m_compilation.Assembly, SymbolEqualityComparer.Default))
@@ -285,8 +292,8 @@ namespace Microsoft.ReactNative.Managed.CodeGen
               eventEmitterName = namedArgument.Value.Value as string;
               break;
             default:
-              var location = attr.ApplicationSyntaxReference.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
-              m_errors.Add(Diagnostic.Create(DiagnosticDescriptors.UnexpectedPropertyInAttribute, location, namedArgument.Key, attr.AttributeClass.Name));
+              var location = attr.ApplicationSyntaxReference?.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
+              m_errors.Add(Diagnostic.Create(DiagnosticDescriptors.UnexpectedPropertyInAttribute, location ?? Location.None, namedArgument.Key, attr.AttributeClass?.Name));
               module = null;
               return false;
           }
@@ -342,21 +349,25 @@ namespace Microsoft.ReactNative.Managed.CodeGen
       return false;
     }
 
-    private bool TryExtractMethod(IMethodSymbol method, out ReactMethod reactMethod)
+    private bool TryExtractMethod(IMethodSymbol method, [NotNullWhen(returnValue: true)] out ReactMethod? reactMethod)
     {
       return TryExtractMethodFromAttributeData(method, ReactTypes.ReactMethodAttribute, synchroneous: false, out reactMethod);
     }
 
-    private bool TryExtractSyncMethod(IMethodSymbol method, out ReactMethod reactMethod)
+    private bool TryExtractSyncMethod(IMethodSymbol method, [NotNullWhen(returnValue: true)] out ReactMethod? reactMethod)
     {
       return TryExtractMethodFromAttributeData(method, ReactTypes.ReactSyncMethodAttribute, synchroneous: true, out reactMethod);
     }
 
-    private bool TryExtractMethodFromAttributeData(IMethodSymbol method, INamedTypeSymbol attributeType, bool synchroneous, out ReactMethod reactMethod)
+    private bool TryExtractMethodFromAttributeData(
+      IMethodSymbol method,
+      INamedTypeSymbol attributeType,
+      bool synchroneous,
+      [NotNullWhen(returnValue: true)] out ReactMethod? reactMethod)
     {
       if (TryFindAttribute(method, attributeType, out var attr))
       {
-        string name = null;
+        string? name = null;
         if (attr.ConstructorArguments.Length > 0)
         {
           name = attr.ConstructorArguments[0].Value as string;
@@ -370,9 +381,12 @@ namespace Microsoft.ReactNative.Managed.CodeGen
               name = namedArgument.Value.Value as string;
               break;
             default:
-              var location = attr.ApplicationSyntaxReference.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
-              m_errors.Add(Diagnostic.Create(DiagnosticDescriptors.UnexpectedPropertyInAttribute, location,
-                namedArgument.Key, attr.AttributeClass.Name));
+              var location = attr.ApplicationSyntaxReference?.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
+              m_errors.Add(Diagnostic.Create(
+                DiagnosticDescriptors.UnexpectedPropertyInAttribute,
+                location ?? Location.None,
+                namedArgument.Key,
+                attr.AttributeClass?.Name));
               reactMethod = null;
               return false;
           }
@@ -494,7 +508,7 @@ namespace Microsoft.ReactNative.Managed.CodeGen
     {
       if (TryFindAttribute(symbol, ReactTypes.ReactConstantAttribute, out var attr))
       {
-        string name = null;
+        string? name = null;
         if (attr.ConstructorArguments.Length > 0)
         {
           name = attr.ConstructorArguments[0].Value as string;
@@ -508,9 +522,12 @@ namespace Microsoft.ReactNative.Managed.CodeGen
               name = namedArgument.Value.Value as string;
               break;
             default:
-              var location = attr.ApplicationSyntaxReference.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
-              m_errors.Add(Diagnostic.Create(DiagnosticDescriptors.UnexpectedPropertyInAttribute, location,
-                namedArgument.Key, attr.AttributeClass.Name));
+              var location = attr.ApplicationSyntaxReference?.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
+              m_errors.Add(Diagnostic.Create(
+                DiagnosticDescriptors.UnexpectedPropertyInAttribute,
+                location ?? Location.None,
+                namedArgument.Key,
+                attr.AttributeClass?.Name));
               constant = null;
               return false;
           }
@@ -550,7 +567,7 @@ namespace Microsoft.ReactNative.Managed.CodeGen
       return false;
     }
 
-    private bool TryExtractEvent(ISymbol symbol, string defaultEventEmitterName, out ReactEvent reactEvent)
+    private bool TryExtractEvent(ISymbol symbol, string defaultEventEmitterName, [NotNullWhen(returnValue: true)] out ReactEvent? reactEvent)
     {
       if (TryExtractCallback(symbol, defaultEventEmitterName, ReactTypes.ReactEventAttribute, out var callbackParameters, out var name, out var declaredModuleName))
       {
@@ -608,9 +625,12 @@ namespace Microsoft.ReactNative.Managed.CodeGen
               callbackContextName = namedArgument.Value.Value as string;
               break;
             default:
-              var location = attr.ApplicationSyntaxReference.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
-              m_errors.Add(Diagnostic.Create(DiagnosticDescriptors.UnexpectedPropertyInAttribute, location,
-                namedArgument.Key, attr.AttributeClass.Name));
+              var location = attr.ApplicationSyntaxReference?.SyntaxTree.GetLocation(attr.ApplicationSyntaxReference.Span);
+              m_errors.Add(Diagnostic.Create(
+                DiagnosticDescriptors.UnexpectedPropertyInAttribute,
+                location ?? Location.None,
+                namedArgument.Key,
+                attr.AttributeClass?.Name));
               return false;
           }
         }
@@ -707,7 +727,7 @@ namespace Microsoft.ReactNative.Managed.CodeGen
 
     private bool TryFindAttribute(ISymbol symbol, INamedTypeSymbol attributeType, out AttributeData attr)
     {
-      attr = symbol.GetAttributes().FirstOrDefault(attr => attr.AttributeClass.Equals(attributeType, SymbolEqualityComparer.Default));
+      attr = symbol.GetAttributes().FirstOrDefault(potentialMatch => potentialMatch.AttributeClass != null && potentialMatch.AttributeClass.Equals(attributeType, SymbolEqualityComparer.Default));
       return attr != null;
     }
 
