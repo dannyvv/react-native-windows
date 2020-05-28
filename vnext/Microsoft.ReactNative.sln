@@ -125,7 +125,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{CF71BDBF
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.ReactNative.Managed.CodeGen.UnitTests", "Microsoft.ReactNative.Managed.CodeGen.UnitTests\Microsoft.ReactNative.Managed.CodeGen.UnitTests.csproj", "{0F4DBB0D-659A-4330-845F-E77204F90B12}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ReactNative.Managed.CodeGen2", "Microsoft.ReactNative.Managed.CodeGen2\Microsoft.ReactNative.Managed.CodeGen2.csproj", "{ADED4FBE-887D-4271-AF24-F0823BCE7961}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.ReactNative.Managed.CodeGen", "Microsoft.ReactNative.Managed.CodeGen\Microsoft.ReactNative.Managed.CodeGen.csproj", "{ADED4FBE-887D-4271-AF24-F0823BCE7961}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution

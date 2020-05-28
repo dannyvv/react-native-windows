@@ -28,7 +28,7 @@
     <AppxBundlePlatforms>x64</AppxBundlePlatforms> -->
     <!-- <UapDefaultAssetScale>200</UapDefaultAssetScale> -->
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
-    <PackageCertificateKeyFile>Microsoft.ReactNative.Managed.CodeGen2_TemporaryKey.pfx</PackageCertificateKeyFile>
+    <PackageCertificateKeyFile>Microsoft.ReactNative.Managed.CodeGen_TemporaryKey.pfx</PackageCertificateKeyFile>
     <PackageCertificateThumbprint>748529C627694198ACAAEA054DFBE0E5A6EEAE08</PackageCertificateThumbprint>
     <AppxPackageSigningEnabled>True</AppxPackageSigningEnabled>
     <AppxGeneratePrisForPortableLibrariesEnabled>false</AppxGeneratePrisForPortableLibrariesEnabled>
@@ -192,7 +192,7 @@
     </PackageReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Microsoft.ReactNative.Managed.CodeGen2_TemporaryKey.pfx" />
+    <None Include="Microsoft.ReactNative.Managed.CodeGen_TemporaryKey.pfx" />
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '16.0' ">
     <VisualStudioVersion>16.0</VisualStudioVersion>
