@@ -4,12 +4,15 @@
  Licensed under the MIT License.. 
 -->
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
   <PropertyGroup>
     <ReactNativeCodeGenEnabled Condition="'$(ReactNativeCodeGenEnabled)' == ''">false</ReactNativeCodeGenEnabled>
   </PropertyGroup>
 
   <Target Name="_ReactNativeCodeGenEnsureCodeGenToolPublished" Condition="'$(ReactNativeCodeGenEnabled)' == 'true'">
-    <Error Text="fail" />
+
+    <Error Condition="'$(ReactNativeWindowsDir)' == ''" Text="CodeGen is only supported when property ReactNativeWindowsDir is set." />
+
     <PropertyGroup>
       <_ReactNativeName>$(AssemblyName)-Microsoft.ReactNative.Managed</_ReactNativeName>
       <_ReactNativeCodeGenOutFolder>$(OutDir)$(_ReactNativeName)\</_ReactNativeCodeGenOutFolder>
@@ -17,8 +20,8 @@
       <ReactNativeCodeGenFile>$(_ReactNativeCodeGenOutFolder)$(_ReactNativeName).g.cs</ReactNativeCodeGenFile>
       <_ReactNativeCodeGenResponseFile>$(_ReactNativeCodeGenOutFolder)$(_ReactNativeName).rsp</_ReactNativeCodeGenResponseFile>
 
-      <_ReactNativeCodeGenProjectPath>C:\Users\danny\source\repos\Solution1\ConsoleApp1\ConsoleApp1.csproj</_ReactNativeCodeGenProjectPath>
-      <_ReactNativeCodeGenProjectProperties>DeployOnBuild=true;Configuration=$(Configuration);TargetFramework=netcoreapp2.2;PublishProfile=DeployAsTool$(Configuration)</_ReactNativeCodeGenProjectProperties>
+      <_ReactNativeCodeGenProjectPath>$(ReactNativeWindowsDir)Microsoft.ReactNative.Managed.CodeGen\Microsoft.ReactNative.Managed.CodeGen.csproj</_ReactNativeCodeGenProjectPath>
+      <_ReactNativeCodeGenProjectProperties>DeployOnBuild=true;Configuration=$(Configuration);TargetRuntime=win-$(Platform);PlatformTarget=$(Platform);TargetFramework=netcoreapp2.2;PublishProfile=DeployAsTool-$(Configuration)-$(Platform)</_ReactNativeCodeGenProjectProperties>
     </PropertyGroup>
 
     <MSBuild Projects="$(_ReactNativeCodeGenProjectPath)" Targets="PublishTool" BuildInParallel="$(BuildInParallel)" Properties="$(_ReactNativeCodeGenProjectProperties)" ContinueOnError="!$(BuildingProject)" RemoveProperties="%(_MSBuildProjectReferenceExistent.GlobalPropertiesToRemove)">
