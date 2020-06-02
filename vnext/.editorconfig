@@ -13,6 +13,9 @@ indent_size = 2
 [*.{c,cpp,h,hpp}]
 end_of_line = crlf
 
+[*.cs]
+end_of_line = crlf
+
 # Xml project files
 [*.{config,csproj,njsproj,props,targets,vcxitems,vcxproj,vcxproj.filters}]
 end_of_line = crlf

@@ -35,6 +35,12 @@
   "[javascript]": {
     "editor.defaultFormatter": "dbaeumer.vscode-eslint"
   },
+  "[csharp]": {
+    "editor.tabSize": 2,
+    // VsCode toolbar and vertical lines show 2 spaces, but with format on save it still prints using 4 spaces.
+    "editor.formatOnSave": false,
+  },
+  "omnisharp.enableEditorConfigSupport": true,
   // These should run through eslint
   "prettier.disableLanguages": [
     "javascript",
@@ -48,6 +54,6 @@
   "clang-format.executable": "${workspaceRoot}/vnext/node_modules/.bin/clang-format",
   "typescript.tsdk": "node_modules\\typescript\\lib",
   "editor.codeActionsOnSave": {
-    "source.fixAll.eslint": true
-  }
+    "source.fixAll.eslint": false
+  },
 }
