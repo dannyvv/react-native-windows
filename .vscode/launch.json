@@ -4,6 +4,21 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
+    {
+        "name": "Debug CLI",
+        "type": "node",
+        "request": "launch",
+        "program": "${workspaceFolder}/node_modules/react-native-windows-init/bin.js",
+        "args": [
+            "--language", "cs",
+            "--overwrite",
+            "--version", "file:${workspaceFolder}/vnext"
+        ],
+        "cwd": "Z:/src/r5/after/cs",
+        "skipFiles": [
+            "<node_internals>/**"
+        ]
+    },
         {
             "type": "node",
             "request": "attach",
