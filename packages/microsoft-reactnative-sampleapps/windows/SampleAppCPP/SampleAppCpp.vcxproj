@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Copyright (c) Microsoft Corporation. Licensed under the MIT License. See LICENSE in the project root for license information. -->
 <Project ToolsVersion="16.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\Microsoft.Net.UWPCoreRuntimeSdk.2.2.10\build\Microsoft.Net.UWPCoreRuntimeSdk.props" Condition="Exists('..\packages\Microsoft.Net.UWPCoreRuntimeSdk.2.2.10\build\Microsoft.Net.UWPCoreRuntimeSdk.props')" />
   <Import Project="..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.props" Condition="Exists('..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.props')" />
   <Import Project="..\packages\runtime.win10-x86.Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.Compiler.props" Condition="Exists('..\packages\runtime.win10-x86.Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.Compiler.props')" />
   <Import Project="..\packages\runtime.win10-x86.Microsoft.Net.Native.SharedLibrary.2.2.7-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.SharedLibrary.props" Condition="Exists('..\packages\runtime.win10-x86.Microsoft.Net.Native.SharedLibrary.2.2.7-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.SharedLibrary.props')" />
@@ -244,6 +245,7 @@
     <Error Condition="!Exists('..\packages\runtime.win10-x86.Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.Compiler.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\runtime.win10-x86.Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\runtime.win10-x86.Microsoft.Net.Native.Compiler.targets'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.props'))" />
     <Error Condition="!Exists('..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.Native.Compiler.2.2.8-rel-28605-00\build\Microsoft.Net.Native.Compiler.targets'))" />
+    <Error Condition="!Exists('..\packages\Microsoft.Net.UWPCoreRuntimeSdk.2.2.10\build\Microsoft.Net.UWPCoreRuntimeSdk.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\Microsoft.Net.UWPCoreRuntimeSdk.2.2.10\build\Microsoft.Net.UWPCoreRuntimeSdk.props'))" />
   </Target>
   <!-- Start Custom .NET Native targets -->
   <!-- Add a workaround to make sure the .NET framework libraries are correctly copied to the AppX folder in Debug (CoreCLR) mode -->
