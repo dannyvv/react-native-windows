@@ -9,8 +9,8 @@ jobs:
     dependsOn: Setup
     condition: ne( dependencies.Setup.outputs['checkPayload.shouldSkipPRBuild'], 'True' )
 
-    pool:
-      vmImage: $(VmImage)
+    pool: $(Pool)
+    container: $(Container)
 
     variables:
       BuildLogDirectory:  $(Build.BinariesDirectory)\$(BuildPlatform)\BuildLogs
