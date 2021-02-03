@@ -21,8 +21,7 @@ stages:
       - job: Setup
         variables:
           - template: variables/vs2019.yml
-        pool:
-          vmImage: windows-2019
+        pool: rnw-pool-4
         steps:
           - template: templates/configure-git.yml
 

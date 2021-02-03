@@ -183,7 +183,7 @@ jobs:
             projectType: app
             additionalInitArguments:
             additionalRunArguments:
-      pool: $(AgentPool.Medium)
+      pool: rnw-pool-4
       timeoutInMinutes: 60
       cancelTimeoutInMinutes: 5
 
