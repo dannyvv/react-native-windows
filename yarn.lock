@@ -9486,9 +9486,9 @@ react-clone-referenced-element@^1.0.1:
   integrity sha512-LZBPvQV8W0B5dFzXFu+D3Tpil8YHS8tO00iFsfXcTLdtpuH7XyvaHqHcoz4hd4uNPQCZ30fceh+s7mLznzMXvg==
 
 react-devtools-core@^4.13.0:
-  version "4.16.0"
-  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.16.0.tgz#c640ab15b98d077bc47f10f84fc8ed3633f537bd"
-  integrity sha512-fqyVbp+wVVey6O4uVBk5s3J/vTiPludp7lulr6a8asTBm7DIA0vLBbjmAOLCnOlkWcgdy4mjsqOgNCbu8uICWw==
+  version "4.20.1"
+  resolved "https://registry.yarnpkg.com/react-devtools-core/-/react-devtools-core-4.20.1.tgz#77e8aacd93ca34cf908c11e6c72151b79217b618"
+  integrity sha512-HBcLfLi2R6VxlWFF2i5lONYlr3KLh324RPFeApZ3G6GGaJrcS/qtk9M/iESw7fRTlgPHEg+A4j6e1j9oXpvi5w==
   dependencies:
     shell-quote "^1.6.1"
     ws "^7"
@@ -11799,6 +11799,7 @@ xmldoc@^1.1.2:
 
 xmldom@^0.5.0, xmldom@^0.6.0, "xmldom@github:xmldom/xmldom#0.7.0":
   version "0.7.0"
+  uid c568938641cc1f121cef5b4df80fcfda1e489b6e
   resolved "https://codeload.github.com/xmldom/xmldom/tar.gz/c568938641cc1f121cef5b4df80fcfda1e489b6e"
 
 xpath@^0.0.27:
