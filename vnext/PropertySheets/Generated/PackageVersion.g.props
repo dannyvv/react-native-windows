@@ -15,5 +15,6 @@
     <ReactNativeWindowsMinor>0</ReactNativeWindowsMinor>
     <ReactNativeWindowsPatch>0</ReactNativeWindowsPatch>
     <ReactNativeWindowsCanary>true</ReactNativeWindowsCanary>
+    <ReactNativeWindowsCommitId>abcdefg</ReactNativeWindowsCommitId>
   </PropertyGroup>
 </Project>

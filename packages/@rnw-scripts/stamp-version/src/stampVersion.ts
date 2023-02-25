@@ -15,24 +15,25 @@ import renderPropsFile from './renderPropsFile';
 
 const {argv} = yargs
   .check(args => {
-    if (args._.length === 1 && semver.valid(<string>args._[0])) {
+    if (args._.length === 2 && semver.valid(<string>args._[0])) {
       return true;
     } else {
-      throw new Error('Usage: stamp-version <version>');
+      throw new Error('Usage: stamp-version <version> <commitid>');
     }
   })
   .showHelpOnFail(false);
 
 (async () => {
   const version = <string>argv._[0];
-  await setPackageVersionProps(version);
+  const commitId = <string>argv._[1];
+  await setPackageVersionProps(version, commitId);
 })();
 
 /**
  * Rewrites PackageVersion.g.props
  */
-async function setPackageVersionProps(version: string) {
-  const propsStr = await renderPropsFile(version);
+async function setPackageVersionProps(version: string, commitId: string) {
+  const propsStr = await renderPropsFile(version, commitId);
 
   const rnwPackage = await findRepoPackage('react-native-windows');
   const propsPath = path.join(
